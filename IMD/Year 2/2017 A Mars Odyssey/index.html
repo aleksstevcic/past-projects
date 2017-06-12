@@ -1,0 +1,416 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+<title>2017: A Space Odyssey</title>
+<head>
+	<style>* {padding: 0; margin: 0}
+    @media all and (orientation: portrait) {
+		.rotateMessage {display: block};	
+	}
+	
+	@media all and (orientation: landscape) {
+		.rotateMessage {display: none};	
+	}
+    
+    </style>
+</head>
+<body>
+<div id = "rotateMsgDiv" class = "rotateMessage"></div>
+<p>
+  <script src="scripts/pixi.min.js"></script>
+  <script src="scripts/bump.js"></script>
+  <script src="scripts/howler.core.js"></script>
+  
+  <script src="scripts/controls.js"></script>
+  <script src="scripts/homescreen.js"></script>
+  <script src="scripts/player.js"></script>
+  <script src="scripts/depth.js"></script>
+  <script src="scripts/background.js"></script>
+  <script src="scripts/enemies.js"></script>
+  <script src="scripts/bullet.js"></script>
+  <script src="scripts/powerups.js"></script>
+  <script src="scripts/scale.js"></script>
+  <script src="scripts/audio.js"></script>
+  <script src="scripts/transition.js"></script>
+  <script src="scripts/score.js"></script>
+  <script src="scripts/pause.js"></script> 
+  <script src="scripts/gameCreate.js"></script>
+  
+  <script src="scripts/levels/levels.js"></script>
+  <script src="scripts/levels/level_0.js"></script>
+  <script src="scripts/levels/level_1.js"></script>
+  <script src="scripts/levels/level_2.js"></script>
+  <script src="scripts/levels/level_9.js"></script>
+</p>
+<script>
+//Firefox doesn't work so stop it from loading the game
+//Firefox 1.0+
+var isFirefox = typeof InstallTrigger !== 'undefined';
+if (isFirefox != true)
+{
+	var rotateMsgDiv = document.getElementById("rotateMsgDiv");
+	rotateMsgDiv.innerHTML = "Please either resize the window or rotate the device to landscape mode & refresh the page";
+//https://github.com/kittykatattack/learningPixi
+	console.log(PIXI);	//Confirm that Pixi is working
+	
+	b = new Bump(PIXI);	//Set up 'Bump' collision library - https://github.com/kittykatattack/bump
+//Pixi Pre-built Code
+	//Aliases
+	var Container = PIXI.Container,
+   		autoDetectRenderer = PIXI.autoDetectRenderer,
+    	loader = PIXI.loader,
+    	resources = PIXI.loader.resources,
+    	Sprite = PIXI.Sprite;
+
+	var stage = new PIXI.Container(),
+   		renderer = PIXI.autoDetectRenderer(256, 256);
+		renderer.backgroundColor = 0xEF2B15;
+	document.body.appendChild(renderer.view);
+	//Handle Screen resolution
+	renderer.view.style.position = "absolute";
+	renderer.view.style.display = "block";
+	renderer.autoResize = true;
+	renderer.resize(window.innerWidth, window.innerHeight);
+//End of Pixi pre-built code
+var start = new PIXI.Container()
+var controller = new PIXI.Container();
+var game = new PIXI.Container();
+//
+//'Loader` object to load an image
+	PIXI.loader
+	 	.add("images/platform1.png")
+		.add("images/platform2.png")
+		.add("images/platformTop.png")
+		.add("images/back.png")
+		.add("images/middle.png")
+		.add("images/front.png")
+		.add("images/proj.png")		//Temp obstacle
+		.add("images/projG.png")	//Green projectile
+		.add("images/projGr.png")	//Enemy projectile
+		.add("images/shield.png")
+		.add("images/boss_spritesheet.png")
+		.add("images/shield_spritesheet.png")
+		.add("images/checkDark.png")
+		.add("images/checkLight.png")
+		.add("images/background.jpg")
+		.add("images/player_spritesheet.png")
+		.add("images/ammoCrate.png")
+		.add("images/progress.png")
+		.add("images/homescreen.jpg")
+		.add("images/down.png")
+		.add("images/jumpD.png")
+		.add("images/left.png")
+		.add("images/right.png")
+		.add("images/shootD.png")
+		.add("images/up.png")
+		.add("images/pause.png")
+ 	 	.load(setup);
+//Keycodes
+	var left  = keyboard(37),	//Left Arrow Key
+    	up    = keyboard(38),	//Up Arrow Key
+      	right = keyboard(39),	//Right Arrow Key
+      	down  = keyboard(40),	//Down Arrow Key
+		shift = keyboard(16),	//Shift Key
+		space = keyboard(32);	//Spacebar
+		R 	  = keyboard(82);	//R key
+		P 	  = keyboard(80);	//P key
+		W	  = keyboard(87);	//Jump
+		A	  = keyboard(65);	//Left
+		D	  = keyboard(68);	//Right
+//Gravity + Jumping
+	var gravity = 0.5;
+	 	accel   = 0;
+	 	jump    = false;
+	 	jumpOn  = true;
+//Background
+	var stageFollow = window.innerWidth / 3;
+	var bbg   = new Array(2);
+	var bmg   = new Array(2);
+	var bfg   = new Array(2);
+	var stars = new Array();
+//Level Transition
+	var progress = new Sprite;	//Sprite that transitions player to next level
+//Player
+	var player = new Sprite;
+	var playerScale = 1;
+	var playerScale2 = 0.85;
+	var playerScale3 = 0.75;
+	var proj  = new Array(20);	//Bullets
+	var count = 0;				//Bullet Count
+	var anim = 0, gtime = 0;	//Animation
+	var texture;
+	var walkanim = false;
+	var direction = true;
+	var canShoot = true;	//Mobile Shooting
+//Healbar
+	var healthbarbg = new PIXI.Graphics();
+	var healthbarfg = new PIXI.Graphics();
+//Ammo
+	var ammobg = new PIXI.Graphics();
+	var ammofg = new PIXI.Graphics();
+//Mobile Controls
+	var leftbox = new Sprite;
+	var rightbox = new Sprite;
+	var topbox = new Sprite;
+	var middlebox = new Sprite;
+	var bottombox = new Sprite;
+	var shootbox = new Sprite;
+	var movementScale;
+	var buttonScale;
+//Depth
+	var canTransition = true;
+	var transition = false;
+	var depthChange = false;	//Mobile transition
+	var depthHeight1 = window.innerHeight - 100;
+	var depthHeight2 = window.innerHeight - 300;
+	var depthHeight3 = window.innerHeight - 500;
+//Platforms
+	var jump = false;
+	var jumpOn = false;
+	var pHit = false;
+	var platform1  = new Array();
+	var platform2  = new Array();
+	var platform3  = new Array();
+	var platformTop1  = new Array();
+	var platformTop2  = new Array();
+	var platformTop3  = new Array();
+	var numPlatforms1 = 12;
+	var numPlatforms2 = 12;
+	var numPlatforms3 = 12;
+	var box;
+//Level
+	var level = 0;
+	var depth = 1;
+	var maxDepth = 3;
+	var minDepth = 1;
+	var numEnemies_0 = 3;
+	var numEnemies_1 = 3;
+	var numEnemies_2 = 8;
+	var numEnemies_9 = 3;
+//Checkpoint
+	var checkpoint = new Array();
+	var checkHit = -1;
+//Powerups
+	var numPowerups = 1;
+	var powerups = new Array();
+//Hazards / Enemies
+	var eHit = false;
+	var hazard;
+	var damage = 1;
+	var enemy = new Array();
+	var numEnemies = 10;
+	var enemyScale1 = 1.5;
+	var enemyScale2 = 1.2;
+	var enemyScale3 = 1;
+	var enemyBlast = new Array();
+	var enemyBlastCount = 1;
+	var enemyBlastTotal = 20;
+	var gReset = false;
+	var collTime = 0;
+	var bossSheet;
+	var bossFrame = new Array();
+//Sound: a = audio
+	var aLaser = new Howl({src: ['music/Laser_Shoot.wav']});
+	var aMusic = new Howl({src: ['music/mars2.wav'],loop: true});
+	var aEnemyHit = new Howl ({src: ['music/hit.wav']	});
+	var aPlayerHit = new Howl ({src: ['music/player_hit.wav']});
+	var aPlayerDeath = new Howl ({src: ['music/player_death.wav']});
+//Homescreen
+	var gameStart = false;
+	var homescreen = new Sprite;
+	var startButton = new Sprite;
+	var levelsButton = new Sprite;
+	var levelSelect = new Array();
+//Pause
+	var Pause = new Sprite(resources["images/pause.png"].texture);
+	Pause.scale = 40;
+	var isPaused = false;
+	
+	var exitBox = new PIXI.Text("Exit");
+	var returnBox = new PIXI.Text("Resume");
+	var resetBox = new PIXI.Text("Reset");	
+	var pauseBox = new Sprite(resources["images/pause.png"].texture);
+	
+	
+	returnBox.zIndex = -51;
+	exitBox.zIndex = -51;
+	resetBox.zIndex = -51;
+//Text
+	var menuScale1;
+	var menuScale2;
+	var menulevelScale1;
+	var menulevelScale2;
+	var numText = 0;
+	var text = new Array();
+	var style = new PIXI.TextStyle({
+   	 	fontFamily: 'Arial',
+    	fontSize: 36,
+    	fontStyle: 'italic',
+   		fontWeight: 'bold',
+    	fill: ['#ffffff', '#00ff99'], // gradient
+   		stroke: '#4a1850',
+    	strokeThickness: 5,
+    	dropShadow: true,
+    	dropShadowColor: '#000000',
+   		dropShadowBlur: 4,
+   		dropShadowAngle: Math.PI / 6,
+   		dropShadowDistance: 6,
+   		wordWrap: true,
+    	wordWrapWidth: 440
+	});
+	var style2 = new PIXI.TextStyle({
+   	 	fontFamily: 'Arial',
+    	fontSize: 36,
+    	fontStyle: 'italic',
+   		fontWeight: 'bold',
+    	fill: ['#ffffff', '#ff0000'], // gradient
+   		stroke: '#4a1850',
+    	strokeThickness: 5,
+    	dropShadow: true,
+    	dropShadowColor: '#000000',
+   		dropShadowBlur: 4,
+   		dropShadowAngle: Math.PI / 6,
+   		dropShadowDistance: 6,
+   		wordWrap: true,
+    	wordWrapWidth: 440
+	});
+//Score
+	var scoreText = new PIXI.Text("0", style);
+/////////////////////////////////////////////////////////////////////////////////
+///Core Game Loop
+/////////////////////////////////////////////////////////////////////////////////	
+	function setup() {
+		playerSetUp();
+		pauseSetUp();
+		//Load Level
+		createAssets();
+		background();
+		level_load();
+		//
+		bulletSetUp();
+		draw();				//Place children on stage
+		scale();
+		audioMusicStart();
+		gameLoop();			//Start the game loops
+	}
+	
+	function gameLoop() {
+ 		requestAnimationFrame(gameLoop);	//Loop this function at 60 frames per second
+		if(gameStart){
+			if(isPaused == false)				//check if game is paused
+  				play(); 						//Get game actions
+			else
+				pauseMenu();					//Run the pausem menu
+			renderer.render(game);				//Render the stage to see the animation
+		}
+		else
+			homeScreen();
+	}
+	var firstRun = true;
+	function play() {
+		playerAnim();				//Player Animations
+		keyboardPress();			//Keyboard
+		mobileControls();
+		bullet();
+		fireWait();
+		backgroundMove();
+		stage.updateLayersOrder();	//Change layers - For depth
+		Depth();					//Map depth
+		camera();
+		enemyHealth();				//Enemy Health
+		enemyMove();
+		enemyAnimate();
+		enemyAttack();
+		healthbar();
+		ammobar();
+		drawScore();
+		playerDamage();				//Player damage from enemies / hazards
+  		playerMove();				//Move the player
+		transitionRun();
+		//console.log(stage.x);
+		if(firstRun)
+		{
+			mobileSetUp();
+			firstRun = false;
+			player.score = 0;	
+		}
+	}
+	
+	function draw(){
+		stage.addChild(Pause);
+		ammoCount();
+		drawHealth();
+		for(i=0;i<2;i++)
+			stage.addChild(stars);	//Back	
+		for(i=0;i<2;i++)			
+			stage.addChild(bbg);		//Mid
+		for(i=0;i<2;i++)			
+			stage.addChild(bmg);		//Front	
+		for(i=0;i<2;i++)		
+			stage.addChild(bfg);
+		for(i=0;i<numPlatforms1;i++)	//Platforms
+				stage.addChild(platform1[i]);
+		for(i=0;i<numPlatforms2;i++)
+				stage.addChild(platform2[i]);
+		for(i=0;i<numPlatforms3;i++)
+				stage.addChild(platform3[i]);
+		for(i=0;i<numPowerups;i++)
+			stage.addChild(powerups[0]);
+		for(i=0;i<20;i++)
+			stage.addChild(proj[i]);	//Bullets
+		stage.addChild(player);			//Player
+		stage.addChild(healthbarfg);
+		stage.addChild(healthbarbg);
+		for(i=0;i<numEnemies;i++)		//Hazards
+			stage.addChild(enemy[i]);
+		for(i=0;i<enemyBlastTotal;i++)
+			stage.addChild(enemyBlast[i]);	//Enemy Shots
+		//stage.addChild(hazard);	
+		stage.addChild(checkpoint[0]);
+		for(i=0;i<numText;i++)
+			stage.addChild(text[i]);
+		stage.addChild(progress);
+		
+		stage.addChild(scoreText);
+		stage.addChild(ammobg);
+		stage.addChild(ammofg);
+		
+		game.addChild(stage);
+		
+		game.addChild(Pause);
+		game.addChild(returnBox);
+		game.addChild(exitBox);
+		game.addChild(resetBox);
+		if(window.innerHeight < 600) {
+			game.addChild(controller);
+		}
+	}
+	
+	stage.updateLayersOrder = function () {
+    	stage.children.sort(function(a,b) {
+       		a.zIndex = a.zIndex || 0;
+        	b.zIndex = b.zIndex || 0;
+       		return b.zIndex - a.zIndex
+    	});
+	};
+};
+//Below this is if the brower is Firefox - Because Firefox can't load the game
+</script>
+<style>
+body {
+    background-color: lightblue;
+}
+h1 {
+    color: white;
+    text-align: center;
+	size: 30;
+	font-family: verdana;
+}
+</style>
+<h1>
+<br><br>
+If you are seeing this message, the game hit a problem.<br>
+</h1>
+</body>
+
+
