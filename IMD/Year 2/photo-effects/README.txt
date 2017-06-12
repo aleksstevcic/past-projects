@@ -7,3 +7,9 @@ REQUIRED
 
 
 Project proposal can be found in the docx file. Not all effects proposed there made it into the program.
+
+
+Contributors:
+
+Aleksandar Stevcic
+Kathleen(Kyte) Spence

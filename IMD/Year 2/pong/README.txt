@@ -19,3 +19,9 @@ KNOWN ERRORS:
 
 -The ball can get stuck between the backside of the paddle ('incomplete' coding on collision, as it only is coded to hit one side of the paddle.)
 which makes it accelerate to ludicrously high speeds.
+
+
+Contributors:
+
+Aleksandar Stevcic
+Andrew Thompson
