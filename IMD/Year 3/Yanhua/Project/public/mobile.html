@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta name="viewport" content="user-scalable=no">
+        <title>Material Shop</title>
+        <link rel="shortcut icon" href="/assets/icons/mobile_favicon.png"/>
+        <script src="scripts/basicFunctions.js"></script>
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+        
+        <style>
+
+
+
+
+
+
+
+
+
+                
+                /********** GLOBALS **********/
+            
+            html {
+                font-family: 'Roboto', sans-serif;
+                background: rgb(255, 240, 223);
+                text-align: center;
+                text-decoration: none;
+                color: white;
+                font-size: 64px;
+                -webkit-touch-callout: none;
+                -webkit-user-select: none;
+                -webkit-text-size-adjust: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+                }           
+            
+            body {
+                background: rgb(255, 248, 240);
+                margin: auto;
+                max-width: 85%;
+                height: 100%;
+                padding: 0px 20px 20px 20px;
+                }
+            
+            h1 {
+                border-top: 1px solid #805142;
+                border-bottom: 1px solid #805142;
+                padding: 10px;
+                color: #805142;
+                font-size: 64px;
+                }
+
+
+
+
+
+
+
+
+
+
+            /********** INSTRUCTIONS **********/
+
+            #instructionsButtonWrapper {
+                position: fixed;
+                right: 58px;
+                top: 60px;
+                z-index: 4;
+            }
+
+            #instructionsButton {
+                color:white;
+                height: 75px;
+                width: 75px;
+                background: rgb(238, 76, 61);
+                box-shadow: 0px 5px 0px 0px #be3528;
+                border: none;
+                border-radius: 50%;
+                font-size: 50px;
+                outline: none;
+            }
+
+            #instructionsButton:active {
+                background: #be3528;
+                transform: translateY(5px);
+                box-shadow: 0px 0px 0px 0px #be3528;
+            }
+            
+            /* white background */
+            #instructionsWrapper {
+                position: fixed;
+                z-index: 2;
+                left: 50%;
+                transform: translate(-50%, 0%);
+                height: 100%;
+                width: 100%;
+                background: white;
+
+            }
+
+            #instructionsText {
+                z-index: 3;
+                position: fixed;
+                margin-top: 200px;
+                padding: 0% 5% 0% 5%;
+                width: 80%;
+                left: 50%;
+                transform: translate(-50%, 0%);
+
+                background: rgb(255, 231, 167);
+                border: solid 10px rgb(238, 76, 61);
+                color: black;
+                font-size:50px;
+                text-align: left;
+            }
+
+
+
+
+
+
+
+
+
+                
+            /********** REFRESH **********/
+
+            #waitRoomWrapper {
+                visibility: hidden;
+                z-index: 1;
+                position: fixed;
+                width: 100%;
+                height: 100%;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%); 
+                
+                background: rgb(255, 255, 255);
+            }
+
+            #waitRoomWrapper.show {
+                visibility: visible;
+            }
+
+            #waitRoomText {
+                position: fixed;
+                padding: 5%;
+                margin-top: 300px;
+                width: 80%;
+                left: 50%;
+                transform: translate(-50%, 0);
+                font-size: 50px;
+
+                color: black;
+                background: rgb(255, 231, 167);
+                border: solid 10px rgb(238, 76, 61);
+            }
+
+            #numUsersWrapper {
+                position: fixed;
+                padding: 5%;
+                width: 80%;
+                margin-top: 900px;
+                font-size: 50px;
+
+                color: black;
+                background: rgb(255, 231, 167);
+                border: solid 10px rgb(238, 76, 61);
+                left: 50%;
+                transform: translate(-50%, 0);
+            }
+
+
+
+
+
+
+
+
+
+                
+            /********** VOTING ************/
+            #votingWrapper {
+                visibility: hidden;
+                z-index: 1;
+                position: fixed;
+                width: 100%;
+                height: 200px;
+                left: 50%;
+                top: 275px;
+                transform: translate(-50%, 0); 
+                
+                background: rgb(44, 44, 44);
+            }
+
+            #votingWrapper.show {
+                visibility: visible;
+            }
+
+            #votingText {
+                position: fixed;
+                width: 100%;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%); 
+                font-size:42px;
+            }
+
+
+
+
+
+
+
+
+
+                
+            /********** TIMER **********/
+            
+            #timerPanel {
+                position: fixed;
+                background: rgb(233, 197, 98);
+                left: 50%;
+                transform: translate(-50%, 0);
+                width: 100%;
+                height: 175px;
+                padding: 30px 0px;
+                border-bottom: 10px solid rgb(216, 144, 49);
+            }
+            
+            #timerWrapper {
+                position: fixed;
+                margin-top: 22px;
+                left: 50%;
+                transform: translate(-50%, 0);
+                width: 610px;
+                background: rgb(238, 76, 61);
+                border: 2px solid rgb(190, 53, 40);
+            }
+
+            #timerText {
+                padding: 30px;
+                font-size: 50px;
+            }
+
+
+
+
+
+
+
+
+
+                
+            /********** SEARCH **********/
+            
+            #searchbar {
+                width: 80%;
+                font-size: 42px;
+                padding: 12px 20px;
+                border: 2px solid #bbb;
+                text-align: center;
+                margin-top: 300px;
+                }
+
+
+
+
+
+
+
+
+
+                
+            /********** MATERIALS **********/
+            
+            #materialList {
+                list-style-type: none;
+                padding: 0;
+                margin: 0;
+                margin-bottom: 300px;
+                }
+            
+            #materialList li a {
+                margin: auto;
+                margin-bottom: 5px;
+                width: 65%;
+                background-color: rgb(255, 116, 109);
+                padding: 25px;
+                text-decoration: none;
+                font-size: 42px;
+                color: white;
+                display: block;
+                border: 2px solid rgb(141, 26, 26);
+                outline: none;
+                }
+            
+            #materialList li a:hover {
+                background-color: rgb(228, 81, 74);
+                outline: none;
+                }
+
+
+
+
+
+
+
+
+
+                
+            /********** BUTTON **********/
+            
+            #submitButton {
+                margin-top: 30px;
+                border: none;
+                border-radius: 10px;
+                color: #ffffff;
+                background: #ee4333;
+                padding: 40px;
+                width: 65%;
+                box-shadow: 0px 15px 0px 0px #be3528;
+                font-size: 56px;
+                outline: none;
+            }
+
+            #submitButton:hover {
+                background: #d63c2d;
+            }
+            
+            #submitButton:active {
+                background: #be3528;
+                transform: translateY(5px);
+                box-shadow: 0px 10px 0px 0px #be3528;
+            }
+            
+            #buttonBox {
+                position: fixed;
+                bottom: 0px;
+                height: 225px;
+                width: 100%;
+                background: rgb(233, 197, 98);
+                left: 50%;
+                transform: translate(-50%, 0);
+                border-top: 10px solid rgb(216, 144, 49);
+            }
+
+
+
+
+
+
+
+
+
+                
+            /********** SNACKBAR **********/
+            
+            #snackbar {
+                width: 70%;
+                visibility: hidden;
+                background-color: #555;
+                color: #fff;
+                text-align: center;
+                padding: 16px;
+                position: fixed;
+                z-index: 1;
+                bottom: 65px;
+                transform: translate(-50%, 0);
+                left: 50%;
+                border-radius: 10px;
+                font-size: 56px;
+            }
+
+            #snackbar.show {
+                visibility: visible;    
+                -webkit-animation: fadein 0.5s;
+                animation:         fadein 0.5s;
+            }
+            
+            @keyframes fadein {
+                from {bottom: 0;    opacity: 0;}
+                to   {bottom: 65px; opacity: 1;}
+            }
+            
+        </style>
+    </head>
+
+    <body>
+
+        <!-- INSTRUCTIONS BUTTON -->
+        <div id="instructionsButtonWrapper">
+            <input id="instructionsButton" type="button" value="i">
+        </div>
+
+        <!-- INSTRUCTIONS PANEL -->
+        <div id="instructionsWrapper">
+            <div id="instructionsText">
+                <ul style="list-style-type:disc">
+                    <li>The player in VR needs three specific ingredients to create a firework and they need to create three different fireworks to win!</li>
+                    <br>
+                    <li>Your job is to decode their clues and select the correct ingredients to send them</li>
+                    <br>
+                    <li>You have thirty seconds to vote for an ingredient and twelve rounds total</li>
+                    <br>
+                    <li>At the end of the game, all the fireworks created will be set off!</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- WAITROOM -->
+        <div id="waitRoomWrapper">
+            <div id="waitRoomText">The game will start when the gong is hit!<br><br>Tap the info button for instructions!</div>
+            <div id="numUsersWrapper">Users connected: <span id="numUsersText"></span></div>
+        </div>
+
+        <!-- VOTING IN PROGRESS -->
+        <div id="votingWrapper">
+            <div id="votingText">Votes will be counted at the end of the timer!</div>
+        </div>
+
+        <!-- TOP CURRENCY PANEL -->
+        <div id="timerPanel">
+            <div id="timerWrapper">
+                <div id="timerText">Time remaining: <span id="time"></span></div>
+            </div>
+        </div>
+
+        <!-- SEARCHBAR -->
+        <input type="text" id="searchbar" onkeyup="search()" placeholder="Search for Ingedients">        
+
+        <ul id="materialList">
+            <h1>FIREWORK COLOUR</h1>
+            <li><a href="javascript:void(0)">Aluminum</a></li>
+            <li><a href="javascript:void(0)">Magnesium</a></li>
+            <li><a href="javascript:void(0)">Phosphorus</a></li>
+            <li><a href="javascript:void(0)">Titanium</a></li>
+            <li><a href="javascript:void(0)">Barium</a></li>
+            <li><a href="javascript:void(0)">Calcium</a></li>
+            <li><a href="javascript:void(0)">Bismuth</a></li>
+            <li><a href="javascript:void(0)">Copper</a></li>
+            <li><a href="javascript:void(0)">Potassium</a></li>
+            <li><a href="javascript:void(0)">Lithium</a></li>
+            <li><a href="javascript:void(0)">Strontium</a></li>
+            <li><a href="javascript:void(0)">Sodium</a></li>
+            <li><a href="javascript:void(0)">Antimony</a></li>
+            <li><a href="javascript:void(0)">Zinc</a></li>
+
+            <br><h1>FIREWORK SHELL</h1>
+            <li><a href="javascript:void(0)">Chlorate</a></li>
+            <li><a href="javascript:void(0)">Nitrate</a></li>
+            <li><a href="javascript:void(0)">Oxide</a></li>
+            <li><a href="javascript:void(0)">Charcoal</a></li>
+            <li><a href="javascript:void(0)">Sulfate</a></li>
+            <li><a href="javascript:void(0)">Perchlorate</a></li>
+
+            <br><h1>FIREWORK SIZE</h1>
+            <li><a href="javascript:void(0)">Shellac</a></li>
+            <li><a href="javascript:void(0)">Dextrin</a></li>
+            <li><a href="javascript:void(0)">Parlon</a></li>
+            <li><a href="javascript:void(0)">Red Gum</a></li>
+        </ul>
+        
+        <!-- SUBMIT BUTTON -->
+        <div id="buttonBox">
+            <input id="submitButton" type="button" value="Vote for Ingredient">
+        </div>
+
+        <!-- CONFIRMATION SNACKBAR -->
+        <span id="snackbar"></span>
+
+        <!-- SELECT ELEMENT -->
+        <script>
+            var submitButton    = $("#submitButton");
+            var snackbar        = $("#snackbar");
+            var timerRemaining  = $('#time');
+            var votingWrapper   = $("#votingWrapper");
+            var waitRoomWrapper = $("#waitRoomWrapper");
+            var numUsersText    = $("#numUsersText");
+            var li              = $("li");
+
+            var instructionsButton  = $("#instructionsButton");
+            var instructionsWrapper = $("#instructionsWrapper");
+
+            var socket = io();
+
+            var checkforUsers  = true;
+            var popupHidden    = true;
+            var finalSelection = null;
+            var resetGameState = false;
+            var selection      = null;
+            var roundsLeft     = 24;
+            var numUsers;
+            var start;
+            
+
+
+            /////////////////// SOCKET STUFF ///////////////////////////////////////////////////////////////////////
+            
+            socket.on("endGame", (data) => {
+                resetGame();
+            });
+            
+            socket.on("startGame", (data) => {
+                startGame();
+            });
+
+            socket.on("resetGame", (data) => {
+                resetGame();
+            });
+        
+            socket.on("connect", (userData) =>
+            { 
+                socket.on("userChanged", (data) => {
+                    if (checkforUsers)
+                    {
+                        // console.log("Total users: " + data.id);
+                        numUsers = data.id - 1; // remove player in VR
+                        numUsersText.text(numUsers);
+                    }
+                });
+            });
+
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////
+            
+            waitRoomWrapper.addClass("show");
+            instructionsWrapper.hide();
+
+            function startGame()
+            {
+                if (instructionsWrapper.is(":visible"))
+                    instructionsWrapper.hide();
+
+                checkforUsers = false;
+                numUsers - 1; // remove user added when gong is hit
+
+                startTimer();
+                waitRoomWrapper.removeClass("show");
+                submitButton.prop('disabled', true); // disable button at start
+
+                li.click(function() 
+                {
+                    selection = $(this).text();
+                    console.log(selection + " selected");
+
+                    if (popupHidden)
+                    {
+                        submitButton.prop('disabled', false); // enable button only when material is selected  
+                    }
+                });
+
+                submitButton.click(function() 
+                {                       
+                    finalSelection = selection;     
+                    selection = null;
+                    submitButton.prop('disabled', true); // disable button after pressed
+                    popupHidden = false;
+
+                    snackbar.addClass("show"); 
+                    votingWrapper.addClass("show");
+
+                    console.log(finalSelection + " voted");
+                    snackbar.html("You voted: " + finalSelection);
+                    socket.emit("selection", { id: finalSelection });
+                    finalSelection = null;
+                });
+            }
+
+            function startTimer() 
+            {
+                
+                var difference
+                var seconds;
+                start = Date.now();
+                roundsLeft = 24;
+                
+                function timer() 
+                {
+                    difference = 15 - (((Date.now() - start) / 1000) | 0);
+                    seconds = (difference % 60) | 0;
+                    seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                    timerRemaining.text(seconds); 
+
+                    if (difference <= 0)
+                    {
+                        if (roundsLeft > 0)
+                        {
+                            start = Date.now() + 1000;
+                            roundsLeft--;
+                            console.log("Rounds remaining: " + roundsLeft);
+
+                            socket.emit("spawnItem", { id: finalSelection });
+
+                            snackbar.removeClass("show");
+                            votingWrapper.removeClass("show");
+                            popupHidden = true;
+                        }
+                    }
+
+                    if (roundsLeft === 0)
+                    {
+                        resetGame();
+                    }
+                }
+
+                timer();
+                setInterval(timer, 1000);
+            };
+
+            function resetGame()
+            {
+                socket.emit("clearArray", {});
+                location = location; // reload browser
+            }
+
+            // instructions toggle
+            instructionsButton.click(function(){
+                instructionsWrapper.toggle();
+            });
+            
+        </script>
+    </body>
+</html>

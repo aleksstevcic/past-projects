@@ -1,0 +1,200 @@
+newmtl bigBuilding:lambert3SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd bigBuilding_texture.png
+bump bigBuilding_bump.png -bm 1
+Ni 1.00
+newmtl bigBuilding1:lambert3SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd bigBuilding_texture.png
+bump bigBuilding_bump.png -bm 1
+Ni 1.00
+newmtl cornerBuilding:lambert3SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd cornerBuilding_texture.png
+bump cornerBuilding_bump.png -bm 1
+Ni 1.00
+newmtl cornerBuilding1:lambert3SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd cornerBuilding_texture.png
+bump cornerBuilding_bump.png -bm 1
+Ni 1.00
+newmtl initialShadingGroup
+illum 4
+Kd 0.50 0.50 0.50
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+newmtl mainBuilding:lambert3SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd mainBuilding_texture.png
+bump mainBuilding_bump.png -bm 1
+Ni 1.00
+newmtl mainBuilding1:lambert3SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd mainBuilding_texture.png
+bump mainBuilding_bump.png -bm 1
+Ni 1.00
+newmtl pasted__lambert2SG
+illum 4
+Kd 1.00 0.90 0.87
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+newmtl smallBuilding:lambert2SG
+illum 4
+Kd 0.50 0.39 0.17
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+newmtl smallBuilding:lambert3SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd smallBuilding_texture.png
+bump smallBuilding_bump.png -bm 1
+Ni 1.00
+newmtl smallBuilding1:lambert2SG
+illum 4
+Kd 0.50 0.39 0.17
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+newmtl smallBuilding1:lambert3SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd smallBuilding_texture.png
+bump smallBuilding_bump.png -bm 1
+Ni 1.00
+newmtl smallBuilding2:lambert2SG
+illum 4
+Kd 0.50 0.39 0.17
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+newmtl smallBuilding2:lambert3SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd smallBuilding_texture.png
+bump smallBuilding_bump.png -bm 1
+Ni 1.00
+newmtl smallBuilding3:lambert2SG
+illum 4
+Kd 0.50 0.39 0.17
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+newmtl smallBuilding3:lambert3SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd smallBuilding_texture.png
+bump smallBuilding_bump.png -bm 1
+Ni 1.00
+newmtl smallBuilding4:lambert2SG
+illum 4
+Kd 0.50 0.39 0.17
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+newmtl smallBuilding4:lambert3SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd smallBuilding_texture.png
+bump smallBuilding_bump.png -bm 1
+Ni 1.00
+newmtl smallBuilding5:lambert2SG
+illum 4
+Kd 0.50 0.39 0.17
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+newmtl smallBuilding5:lambert3SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd smallBuilding_texture.png
+bump smallBuilding_bump.png -bm 1
+Ni 1.00
+newmtl smallBuildingGate:lambert2SG
+illum 4
+Kd 0.50 0.39 0.17
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+newmtl smallBuildingGate:lambert3SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd smallBuildingGate_texture.png
+bump smallBuildingGate_bump.png -bm 1
+Ni 1.00
+newmtl smallBuildingGate1:lambert2SG
+illum 4
+Kd 0.50 0.39 0.17
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+newmtl smallBuildingGate1:lambert3SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd smallBuildingGate_texture.png
+bump smallBuildingGate_bump.png -bm 1
+Ni 1.00
+newmtl smallBuildingGate2:lambert2SG
+illum 4
+Kd 0.50 0.39 0.17
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+newmtl smallBuildingGate2:lambert3SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd smallBuildingGate_texture.png
+bump smallBuildingGate_bump.png -bm 1
+Ni 1.00
+newmtl smallBuildingGate3:lambert2SG
+illum 4
+Kd 0.50 0.39 0.17
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+newmtl smallBuildingGate3:lambert3SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd smallBuildingGate_texture.png
+bump smallBuildingGate_bump.png -bm 1
+Ni 1.00

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <!-- Components -->
+        <script src="components/aframe.min.js"></script>
+        <script src="components/aframe-extras.min.js"></script>
+        <script src="components/aabb-collider.js"></script>
+        <script src="components/super-hands.min.js"></script>
+        <script src="components/aframe-particle-system-component.min.js"></script>
+        <script src="components/aframe-physics-extras.min.js"></script>
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="scripts/audio.js"></script>
+        <title>Yanhua - VR</title>
+    </head>
+    <body class="a-body">
+		<a-scene id="Scene" physics="gravity:-9.8; iterations:10; friction:0.01; restitution: 0.3">
+            <a-assets>
+            <!-- Assets -->
+                <img id="sky"                 src="assets/textures/SkyDome_night.png"/>
+                <img id="moonImg"             src="assets/textures/moon.png"/>
+                <img id="fireworkImg"         src="assets/textures/Firework.png"/>
+                <img id="fireworkWinImg"      src="assets/textures/firework_icon_success.png"/>
+                <img id="fireworkFailImg"     src="assets/textures/firework_icon_failure.png"/>
+                <img id="fireworkPassiveImg"  src="assets/textures/firework_icon_incomplete.png"/>
+                
+                <audio id="audio-music"       src="assets/audio/Way of the Dragon.mp3" preload="auto" loop autoplay></audio>
+                <audio id="audio-gong"        src="assets/audio/gong.mp3"        preload="auto"></audio>
+                <audio id="audio-firework-01" src="assets/audio/firework_01.mp3" preload="auto"></audio>
+                <audio id="audio-firework-02" src="assets/audio/firework_02.mp3" preload="auto"></audio>
+                <audio id="audio-firework-03" src="assets/audio/firework_03.mp3" preload="auto"></audio>
+                <audio id="audio-firework-04" src="assets/audio/firework_04.mp3" preload="auto"></audio>
+                
+                <audio id="audio-mixing-01"   src="assets/audio/mixing_01.mp3"   preload="auto"></audio>
+                <audio id="audio-mixing-02"   src="assets/audio/mixing_02.mp3"   preload="auto"></audio>
+                <audio id="audio-mixing-03"   src="assets/audio/mixing_03.mp3"   preload="auto"></audio>
+                <audio id="audio-mixing-04"   src="assets/audio/mixing_04.mp3"   preload="auto"></audio>
+                
+                <a-asset-item id="prop-environment-gltf" src="assets/models/environment/forbiddenPalace.gltf"></a-asset-item>
+                <a-asset-item id="prop-floor-gltf"       src="assets/models/gltf/floor.gltf"></a-asset-item>
+                <a-asset-item id="prop-gong-gltf"        src="assets/models/gltf/gong.gltf"></a-asset-item>
+                <a-asset-item id="prop-scroll-gltf"      src="assets/models/gltf/scroll.gltf"></a-asset-item>
+                <a-asset-item id="prop-bowl-gltf"        src="assets/models/gltf/bowl.gltf"></a-asset-item>
+                <a-asset-item id="prop-table-gltf"       src="assets/models/gltf/table.gltf"></a-asset-item>
+                <a-asset-item id="prop-stick-gltf"       src="assets/models/gltf/stick.gltf"></a-asset-item>
+                
+                <a-asset-item id="prop-jar_1-obj"        src="assets/models/props/jar_1.obj"></a-asset-item>
+                <a-asset-item id="prop-jar_2-obj"        src="assets/models/props/jar_2.obj"></a-asset-item>
+                <a-asset-item id="prop-jar_3-obj"        src="assets/models/props/jar_3.obj"></a-asset-item>
+                
+            <!-- Super Hands-->
+                <a-mixin    id="controller"
+                            physics-collider
+                            static-body="   shape: sphere; sphereRadius: 0.02"
+                            super-hands="   colliderEvent: collisions; colliderEventProperty: els; colliderEndEvent: collisions; colliderEndEventProperty: clearedEls"
+                            collision-filter = "group: hands;
+                                            collidesWith: stick, objects;
+                                            collisionForces: false">
+                </a-mixin>
+            <!-- Ingredients -->
+                <a-mixin id="object"></a-mixin>
+                <a-mixin id="object-hovered" material="opacity: 0.7; transparent: true"></a-mixin>
+                <a-mixin id="object-dragover" material="opacity: 0.7; transparent: true"></a-mixin>
+            </a-assets>
+			
+        <!-- Controls -->
+        <a-entity id="Player" progressive-controls="controllerModel:false;gazeMixin:mycursor;touchMixin:mytouch;override:true">
+            <a-entity id="handControls" position="0 0 0">
+                <a-entity id="leftHand" hand-controls="left" mixin="controller"></a-entity>
+                <a-entity id="rightHand" hand-controls="right" mixin="controller"></a-entity>
+            </a-entity>
+            <a-camera position="0 0 0" camera="" look-controls="" wasd-controls="acceleration: 0.0" data-aframe-inspector-original-camera="">
+                <a-entity mixin="mycursor" raycaster=""></a-entity>
+            </a-camera>
+        </a-entity>
+            
+<!--Collision Boxes-->
+    <a-entity id="World-Collisions">
+        <a-entity 
+            id="prop-bowl-collision" geometry="primitive: cylinder; radius:0.17; height: 0.05" position="0 0.9 0.030" collision-filter="collidesWith: objects" static-body visible="false">
+        </a-entity>
+        <a-entity 
+            id="prop-mixBowl-collision" geometry="primitive: cylinder; radius:0.12; height: 0.05" position="-0.52 0.85 -0.055" collision-filter="collidesWith: objects" static-body visible="false">
+        </a-entity>
+    </a-entity>
+<!--World--> 
+    <a-entity id="World" position="0 0.0 1.3" scale="0.4 0.4 0.4">
+    <!-- Lights-->
+            <a-entity id="Light_Grp">
+                <a-entity
+                          id="global-light" light="intensity:0.4;type:point;castShadow:false;shadowMapHeight:1024;shadowMapWidth:1024" 
+                          position="135.0 140.0 0">
+                </a-entity>
+                <a-entity id="ambient-light" light="color:#BBB;intensity:0.4;type:ambient"></a-entity>
+                <a-entity 
+                          id="spot-light" light="color:#BBB;intensity:0.4;type:spot" position="0 4.5 -1.0" rotation="-90.0 0 0">
+                </a-entity>
+            </a-entity>
+            
+    <!-- Text-->
+            <a-entity id="textHolder" requirements="" position="-3.375 5.175 -3.610" rotation="0 90 0" scale="10 10 10">
+                <a-image 
+                         id="fireworkIcon01" position="-0.45 0.025 0" scale="0.04 0.05 0.05"
+                         material="depthWrite:false;src:#fireworkPassiveImg">
+                </a-image>
+                <a-image 
+                         id="fireworkIcon02" position="-0.35 0.025 0" scale="0.04 0.05 0.05"
+                         material="depthWrite:false;src:#fireworkPassiveImg">
+                </a-image>
+                <a-image 
+                         id="fireworkIcon03" position="-0.25 0.025 0" scale="0.04 0.05 0.05"
+                         material="depthWrite:false;src:#fireworkPassiveImg">
+                </a-image>
+                <a-entity id="requirements-clues" position="-0.36 0.015 0.0" scale="0.7 0.7 0.7">
+                    <a-entity id="req-1-text-1" text="align:center; color:#00d3b3; value:" position="0.0 -0.050 0"></a-entity>
+                    <a-entity id="req-1-text-2" text="align:center; color:#00d3b3; value:" position="0.0 -0.10 0"></a-entity>
+                    <a-entity id="req-2-text-1" text="align:center; color:#0dd300; value:" position="0.0 -0.20 0"></a-entity>
+                    <a-entity id="req-2-text-2" text="align:center; color:#F1C40F; value:" position="0.0 -0.25 0"></a-entity>
+                    <a-entity id="req-3-text-1" text="align:center; color:#ff71fb; value:" position="0.0 -0.35 0"></a-entity>
+                    <a-entity id="req-3-text-2" text="align:center; color:#ff71fb; value:" position="0.0 -0.40 0"></a-entity>
+                </a-entity>
+
+                <a-entity id="time-left-text" text="value:Time Left:" position="0.04 -0.325 0"></a-entity>
+                <a-entity id="timerHolder" text="value:" position="0.115 -0.375 0"></a-entity>
+            </a-entity>
+
+            <a-entity 
+                      id="prop-scroll" gltf-model="#prop-scroll-gltf" position="-4.0 3.75 0.0" rotation="90 90 0" scale="5.0 5.0 6.0" shadow="cast:false; receive:true;">
+            </a-entity>
+
+            <a-entity
+                      id="prop-gong" collision-filter="group: gong; collidesWith: stick" static-body gltf-model="#prop-gong-gltf" position="3.25 0 0" rotation="0 180 0" shadow="cast:true; receive:true">
+            </a-entity>
+
+        <!--Holders-->
+                <a-entity id="textGameState" text="align:center; value:Hit Gong To Start" position="0 3 -5" scale="10 10 10"></a-entity>
+        
+                <a-entity id="fireworkHolder" fireworks></a-entity> <!-- Fireworks are added to this -->
+
+                <a-entity id="objectHolder" collide-object></a-entity> <!-- Ingredients are spawned into this -->
+
+        <!-- Table Props -->
+            <a-entity id="tableProps">
+                <a-entity 
+                          id="prop-bowl" collision-filter="collidesWith: default, objects, stick" static-body gltf-model="#prop-bowl-gltf" position="0.0 1.894 -3.9" scale="0.7 0.7 0.7" shadow="cast:true; receive:true;">
+                </a-entity>
+
+                <a-entity id="prop-bowl-text" position="0 2.115 -2.636" scale="3 3 1" text="value:Main Bowl;align:center" id="bowl-Text"></a-entity>
+
+                <a-entity 
+                          id="prop-mixBowl" collision-filter="collidesWith: default, objects" static-body gltf-model="#prop-bowl-gltf" 
+                          position="-1.3 1.901 -3.9" scale="0.5 0.5 0.5" shadow="cast:true; receive:true;">
+                </a-entity>
+
+                <a-entity id ="prop-mixBowl-text" position="-1.298 2.115 -2.931" scale="3 3 1" text="value:Mixing Bowl;align:center" id="mixingbowl-Text"></a-entity>
+
+                <a-entity 
+                          id="prop-table" collision-filter="collidesWith: default, objects, stick" static-body gltf-model="#prop-table-gltf" position="0 0 -4" scale="0.7 0.7 0.7" shadow="cast:true; receive:true;">
+                </a-entity>
+
+                <a-entity 
+                            id="prop-stick" collision-filter="group: stick; collidesWith: default, hands, objects, gong" dynamic-body grabbable gltf-model="#prop-stick-gltf" 
+                            position="2.5 3.0 -4.0" scale="1.0 1.0 1.0" shadow="cast:true; receive:true;" mass="3">
+                </a-entity>
+            </a-entity>
+
+        <!--Environment-->
+            <a-entity 
+                      id="skyBox" scale="30 30 30" geometry="primitive:sphere;radius:500" 
+                      material="shader:flat;side:back;height:2048;src:#sky;width:2048">
+            </a-entity>
+            <a-entity 
+                      id="floor" collision-filter="collidesWith: default, hands, objects, stick" static-body gltf-model="#prop-floor-gltf" shadow="cast:false" scale="3.0 3.0 3.0">
+            </a-entity>
+            <a-entity 
+                      id="environment" gltf-model="#prop-environment-gltf" position="0.0 0.0 0.0" scale="3.0 3.0 3.0" shadow="cast:false; receive:true;">
+            </a-entity>
+        
+            <a-image id="moon" position="7964.98 3247.386 0" rotation="14.84 -90.012 0" material="depthWrite:false;src:#moonImg" geometry="height:600;width:600"></a-image>
+        </a-entity> <!-- World End -->
+        
+    <!-- Scripts -->
+
+        <script src="scripts/globals.js"></script>
+        <script src="scripts/audio.js"></script>
+        <script src="scripts/components.js"></script>
+        <script src="scripts/requirements.js"></script>
+		<script src="scripts/particle.js"></script>
+        <script src="scripts/fireworks.js"></script>
+        <script src="scripts/createObject.js"></script>
+        <script src="scripts/collision.js"></script>
+        <script src="scripts/listener.js"></script>
+        <script src="scripts/gameStates.js"></script>
+<!-- Page End -->
+		</a-scene>
+    </body>
+</html>
